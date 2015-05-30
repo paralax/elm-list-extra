@@ -6,6 +6,7 @@ module List.Extra
   , dropWhile
   , collect
   , mapi
+  , permutations
   , zip
   , zip3
   , zip4
@@ -14,7 +15,7 @@ module List.Extra
 {-| Convenience functions for working with List
 
 # Common Helpers
-@docs maximumBy, minimumBy, andMap, takeWhile, dropWhile, collect, mapi
+@docs maximumBy, minimumBy, andMap, takeWhile, dropWhile, collect, mapi, permutations
 
 # Zipping
 @docs zip, zip3, zip4, zip5
@@ -66,8 +67,20 @@ collect f ls = List.map (\x -> f x) ls |> List.concat
 
 {-| Creates a new collection whose elements are the results of applying the given function to each of the elements of the collection. The integer index passed to the function indicates the index (from 0) of element being transformed.
 -}
-mapi : (int -> a -> a') -> List a -> List a'
-mapi f l = zip [0..(List.length l - 1) |> List.map (\(i,x) -> f i x)
+mapi : (Int -> a -> a') -> List a -> List a'
+mapi f l = zip [0..(List.length l - 1)] l |> List.map (\(i,x) -> f i x)
+
+delete : a -> List a -> List a
+delete e ls = List.filter (\x -> x /= e) ls
+
+{-- http://rosettacode.org/wiki/Permutations#Haskell --}
+permutations : List a -> List (List a)
+permutations ls =
+  case ls of 
+     [] -> [[]] 
+     x::xs -> let x' = xs
+                  ys' = permutations (delete x xs)
+              in  [x'::ys']
 
 {-| Map functions taking multiple arguments over multiple lists. Each list should be of the same length.
 
