@@ -5,6 +5,7 @@ module List.Extra
   , takeWhile
   , dropWhile
   , collect
+  , delete
   , mapi
   , permutations
   , zip
@@ -15,7 +16,7 @@ module List.Extra
 {-| Convenience functions for working with List
 
 # Common Helpers
-@docs maximumBy, minimumBy, andMap, takeWhile, dropWhile, collect, mapi, permutations
+@docs maximumBy, minimumBy, andMap, takeWhile, dropWhile, collect, delete, mapi, permutations
 
 # Zipping
 @docs zip, zip3, zip4, zip5
@@ -70,6 +71,8 @@ collect f ls = List.map (\x -> f x) ls |> List.concat
 mapi : (Int -> a -> a') -> List a -> List a'
 mapi f l = zip [0..(List.length l - 1)] l |> List.map (\(i,x) -> f i x)
 
+{-| Delete all instances of element e from the list
+-}
 delete : a -> List a -> List a
 delete e ls = List.filter (\x -> x /= e) ls
 
