@@ -4,6 +4,8 @@ module List.Extra
   , andMap
   , takeWhile
   , dropWhile
+  , collect
+  , mapi
   , zip
   , zip3
   , zip4
@@ -12,7 +14,7 @@ module List.Extra
 {-| Convenience functions for working with List
 
 # Common Helpers
-@docs maximumBy, minimumBy, andMap, takeWhile, dropWhile
+@docs maximumBy, minimumBy, andMap, takeWhile, dropWhile, collect, mapi
 
 # Zipping
 @docs zip, zip3, zip4, zip5
@@ -56,6 +58,16 @@ dropWhile predicate list =
     []      -> []
     x::xs   -> if | (predicate x) -> dropWhile predicate xs
                   | otherwise -> list
+
+{-| Collect iterates over each element of the list, applies the given function. Concatenates all the results and returns the combined list.
+-}
+collect : (a -> List a') -> List a -> List a'
+collect f ls = List.map (\x -> f x) ls |> List.concat
+
+{-| Creates a new collection whose elements are the results of applying the given function to each of the elements of the collection. The integer index passed to the function indicates the index (from 0) of element being transformed.
+-}
+mapi : (int -> a -> a') -> List a -> List a'
+mapi f l = zip [0..(List.length l - 1) |> List.map (\(i,x) -> f i x)
 
 {-| Map functions taking multiple arguments over multiple lists. Each list should be of the same length.
 
